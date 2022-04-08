@@ -1,0 +1,1 @@
+([('app', '/Users/brantleywiggins/elera_pay_bot/dist/app', 'EXECUTABLE')],)
