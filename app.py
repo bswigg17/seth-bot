@@ -34,7 +34,7 @@ class App(tk.Tk):
         self.title('Seth Bot')
 
     def config_size(self):
-        self.geometry('600x520')
+        self.geometry('700x520')
 
     def config_header(self):
         ttk.Label(self, text="Upload Files", font=("Arial", 30)).pack(pady=25)
