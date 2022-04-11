@@ -16,9 +16,9 @@ def seth_bot(sprint="./SprintStatusNEW.xlsx", bugs="./Export (4).xlsx", backlog=
         wb_sprint, wb_bugs, wb_backlog = load_workbooks(sprint, bugs, backlog)
         sprint_week = week_to_column(week)
         if new_sprint:
-            do_sprint_work(wb_sprint['Q4-21 Sprint 4'], wb_backlog.active, sprint_week, wb_sprint.create_sheet('New Sprint'))
+            do_sprint_work(wb_sprint.active, wb_backlog.active, sprint_week, wb_sprint.create_sheet('New Sprint'))
         else:
-            do_sprint_work(wb_sprint['Q4-21 Sprint 4'], wb_backlog.active, sprint_week)
+            do_sprint_work(wb_sprint.active, wb_backlog.active, sprint_week)
         # do_bug_work(wb_sprint['Defect Status'], wb_bugs.active, sprint_week)
         wb_sprint.save('Update.xlsx')
         return True
