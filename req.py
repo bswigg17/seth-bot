@@ -13,6 +13,5 @@ if (float(version) > float(current_version)):
                 if chunk:
                     f.write(chunk)
         os.system("chmod u=rwx,g=r,o=r ./dist/new")
-        os.system("./dist/new")
         current_version = version
-
+os.system("./dist/new")

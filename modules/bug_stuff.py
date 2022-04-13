@@ -1,70 +1,39 @@
 from openpyxl import Workbook, load_workbook
 from openpyxl.styles import PatternFill, Border, Side, Alignment, Font
+import modules.styles as styles
 
 
-font = Font(name='Arial',
-            size=11,
-            bold=True, 
-            )
-
-fill_resolved = PatternFill(fill_type='solid',
-                            start_color='0000B050',
-                            end_color='0000B050')
-
-fill_waiting = PatternFill(fill_type='solid',
-                            start_color='A9D08E',
-                            end_color='A9D08E')
-
-fill_testing = PatternFill(fill_type='solid',
-                            start_color='0000B0F0',
-                            end_color='0000B0F0')
-
-side = Side(border_style='thin')
-
-
-border = Border(top=side,bottom=side, left=side, right=side)
-
-# completed_ids = set()
-
-def week_to_col(week_num):
-    return chr(66 + int(week_num))
-
-# def new_sprint(val):
-#     if val: 
-#         completed_ids = set()
-
-
-def do_bug_work(sprint, bugs, week):
-    # clean_ws(sprint)
+def do_bug_work(sprint, bugs, week, new_sprint):
+    if new_sprint:
+        clean_ws(sprint)
     id_hash = make_hash(bugs)
-    merge(sprint, id_hash)
+    merge(sprint, id_hash, week)
 
 
-# def load_books(book1_name, book2_name):
-#     wb_export = load_workbook(book2_name)
-#     wb_sprint = load_workbook(book1_name)
-#     return wb_sprint, wb_export
-    
-# def load_sheets(wb_sprint, wb_export):
-#     ws = wb_sprint['Defect Status']
-#     ws_export = wb_export.active
-#     return ws, ws_export
+def clean_ws(sprint):
+    i = 1
+    for row in enumerate(sprint):
+        sprint.delete_rows(i)
+    data = ('Title', 'ID', 'Week 1', 'Week 2', 'Week 3')
+    sprint.append(data)
+
 
 def format_value(cell, val):
-    cell.font = font
+    cell.font = styles.FONT 
+    cell.border = styles.BORDER
+    cell.alignment = styles.ALIGNMENT
     if val in {'Ready', 'In Progress', ''}:
-        cell.fill = fill_waiting
+        cell.fill = styles.FILL_WAITING
         cell.value = 'Awaiting Resolution'
     elif val == 'Test':
-        cell.fill = fill_testing
+        cell.fill = styles.FILL_TESTING
         cell.value = 'Testing'
     elif val in {'Done', 'Accepted'}:
-        cell.fill = fill_resolved
+        cell.fill = styles.FILL_RESOLVED
         cell.value = 'RESOLVED'
     elif val == 'NEW':
         cell.value = val
-    cell.border = border
-    cell.alignment = Alignment(horizontal='center')
+
 
 # def clean_ws(ws):
 #     """Iterate over row D and delete rows with resolved"""
@@ -93,23 +62,32 @@ def make_hash(ws_export):
         #     i += 1
         #     continue
         #Check for Duplicate Rows
-        # if id_.value in id_hash:
-        #     ws.delete_rows(i)
-        #     continue
+        elif id_.value in id_hash:
+            ws.delete_rows(i)
+            continue
         id_hash[id_.value] = {'Title': ws_export[f'A{i}'].value, 'Status': ws_export[f'D{i}'].value}
         i += 1
     return id_hash
 
 
-def merge(ws, id_hash):
+def format_new_row(ws, week, id_, data, row): 
+    ws[f'A{row}'] = data['Title']
+    ws[f'B{row}'] = id_ 
+    i = ord('C')
+    while i < ord(week):
+        format_value(ws[f'{chr(i)}{row}'], 'NEW')
+        i += 1
+    format_value(ws[f'{week}{row}'], data['Status'])
+
+
+def merge(ws, id_hash, week):
     i = 1
     for id_ in ws['B']:
         if id_.value == 'ID':
             i += 1
             continue
         elif id_.value in id_hash:
-            format_value(ws[f'D{i}'], id_hash[id_.value]['Status'])
-            ws[f'E{i}'] = id_hash[id_.value]['Points']
+            format_value(ws[f'{week}{i}'], id_hash[id_.value]['Status'])
             del id_hash[id_.value]
             i += 1
         else:
@@ -118,13 +96,11 @@ def merge(ws, id_hash):
     # ws.delete_rows(i+1)
     if len(id_hash) > 0:
         for id_ in id_hash:
-            data = id_hash[id_]
-            ws[f'A{i}'] = data['Title']
-            ws[f'B{i}'] = id_ 
-            format_value(ws[f'C{i}'], 'NEW')
-            format_value(ws[f'D{i}'], data['Status'])
-            ws[f'E{i}'] = data['Points']
+            format_new_row(ws, week, id_, id_hash[id_], i)
             i += 1
 
 # if __name__ == "__main__":
-#     bug_work("./SprintStatus.xlsx", "./Export-11.xlsx")
+#     wb, bug_ws = load_workbook("modules/Sprint Status Elera Pay MC (5).xlsx"), load_workbook("modules/Export (6).xlsx").active
+#     ws = wb['Defect Status']
+#     do_bug_work(ws, bug_ws, chr(66 + 1), 1)
+#     wb.save('New.xlsx')

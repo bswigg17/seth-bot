@@ -11,7 +11,7 @@ def load_workbooks(sprint="./Sprint Status Elera Pay MC (5).xlsx", bugs="./Bugs 
     wb_export = load_workbook(backlog)
     return wb_sprint, wb_bugs, wb_export
 
-def seth_bot(sprint="./SprintStatusNEW.xlsx", bugs="./Export (4).xlsx", backlog="./Export (1).xlsx", week=5, new_sprint=1):
+def seth_bot(sprint="./SprintStatusNEW.xlsx", bugs="./Export (4).xlsx", backlog="./Export (1).xlsx", week=5, new_sprint=0):
     try:
         wb_sprint, wb_bugs, wb_backlog = load_workbooks(sprint, bugs, backlog)
         sprint_week = week_to_column(week)
@@ -19,7 +19,7 @@ def seth_bot(sprint="./SprintStatusNEW.xlsx", bugs="./Export (4).xlsx", backlog=
             do_sprint_work(wb_sprint.active, wb_backlog.active, sprint_week, wb_sprint.create_sheet('New Sprint'))
         else:
             do_sprint_work(wb_sprint.active, wb_backlog.active, sprint_week)
-        # do_bug_work(wb_sprint['Defect Status'], wb_bugs.active, sprint_week)
+        do_bug_work(wb_sprint['Defect Status'], wb_bugs.active, sprint_week, new_sprint)
         wb_sprint.save('Update.xlsx')
         return True
     except Exception as E:
