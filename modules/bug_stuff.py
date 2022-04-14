@@ -90,8 +90,9 @@ def merge(ws, id_hash, week):
             format_value(ws[f'{week}{i}'], id_hash[id_.value]['Status'])
             del id_hash[id_.value]
             i += 1
-        else:
-            ws.delete_rows(i)
+        elif id_.value not in id_hash:
+            format_value(ws[f'{week}{i}'], 'Done')
+            
 
     # ws.delete_rows(i+1)
     if len(id_hash) > 0:
@@ -100,7 +101,7 @@ def merge(ws, id_hash, week):
             i += 1
 
 # if __name__ == "__main__":
-#     wb, bug_ws = load_workbook("modules/Sprint Status Elera Pay MC (5).xlsx"), load_workbook("modules/Export (6).xlsx").active
+#     wb, bug_ws = load_workbook("modules/ELERA Pay Sprint Status 2022.xlsx"), load_workbook("modules/New Bugs.xlsx").active
 #     ws = wb['Defect Status']
-#     do_bug_work(ws, bug_ws, chr(66 + 1), 1)
+#     do_bug_work(ws, bug_ws, chr(66 + 2), 0)
 #     wb.save('New.xlsx')

@@ -185,10 +185,10 @@ def update_rows_for_sprint(ws, id_hash, column):
             handle_row_edge_case(ws, ws_row_num)
             ws_row_num += 1
         elif id_.value not in id_hash:
-            format_data('Moved', ws[f'{column}{i}'])
+            format_data('Moved', ws[f'{column}{ws_row_num}'])
             ws_row_num += 1
         else:
-            format_data(id_hash[id_.value]['Status'], ws[f'{column}{i}'])
+            format_data(id_hash[id_.value]['Status'], ws[f'{column}{ws_row_num}'])
             done_ids.add(id_.value)
             del id_hash[id_.value]
             ws_row_num += 1
@@ -272,4 +272,6 @@ def do_sprint_work(sprint, backlog, week, new_sprint_ws=None):
 
 
 # if __name__ == "__main__":
-#     do_sprint_work('./SprintStatus.xlsx', "./Export-10.xlsx", 1)
+#     wb_sprint, wb_backlog = load_workbook('modules/ELERA Pay Sprint Status 2022.xlsx'), load_workbook('modules/Export-13.xlsx')
+#     do_sprint_work(wb_sprint.active, wb_backlog.active, chr(66 + 2))
+#     wb_sprint.save('New.xlsx')

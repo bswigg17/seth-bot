@@ -14,7 +14,6 @@ ALIGNMENT = Alignment(horizontal='center')
 FILL_RESOLVED = PatternFill(fill_type='solid',
                             start_color='0000B050',
                             end_color='0000B050')
-                            
 
 FILL_WAITING = PatternFill(fill_type='solid',
                             start_color='A9D08E',
@@ -23,7 +22,7 @@ FILL_WAITING = PatternFill(fill_type='solid',
 FILL_TESTING = PatternFill(fill_type='solid',
                             start_color='0000B0F0',
                             end_color='0000B0F0')
-
+                            
 FILL_CARRIED_OVER  = PatternFill(fill_type='solid',
                     start_color='FFC000',
                     end_color='FFC000')
